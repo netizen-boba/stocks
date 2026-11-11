@@ -503,7 +503,7 @@ footer{color:var(--muted);font-size:11.8px;margin-top:26px;line-height:1.6;borde
 </div>
 
 <footer>
-  Prices and fundamentals from stockanalysis.com, fetched live by your browser. Daily closes;
+  Prices and fundamentals from stockanalysis.com, fetched live via a Cloudflare proxy. Daily closes;
   the latest point is today's quote and updates through the session. Mutual funds are the exception —
   one NAV a day, published after the close, and no intraday data. Non-US listings are converted
   to USD at the ECB's daily reference rate (via frankfurter.dev), so their returns include the
@@ -649,7 +649,10 @@ const PERIODS = [
   {key:"12M", label:"12M", days:365}
 ];
 const SERIES_VARS = ["--s1","--s2","--s3","--s4","--s5","--s6","--s7","--s8"];
-const API = "https://stockanalysis.com/api";
+/* Since Nov 2026 stockanalysis.com rejects (503) requests sent straight from another website,
+   so data goes through a small Cloudflare Worker (worker.js) that fetches it server-side and
+   adds CORS headers. Replace the URL below with your Worker's address. */
+const API = "https://stock-proxy.YOUR-SUBDOMAIN.workers.dev/api";
 
 /* stockanalysis carries no exchange rates, so a non-US listing is converted with the ECB's
    daily reference rates (frankfurter.dev, a thin free wrapper over the ECB's own series —
